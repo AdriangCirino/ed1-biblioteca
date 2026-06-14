@@ -2,17 +2,17 @@
 Trabalho final da matéria de estrutura de dados 1 
 Mat: 20240017215
 ## Plano de Implementação
-
+// esse steo by step foiu gerado por ia 
 ### Step 1 — Structs (data.h)
-- Struct Usuario: nome, email
-- Struct NoUsuario: usuario + ponteiro next
-- Struct Livro: titulo, autor, ano, codigo, status, email_usuario
-- Struct NoLivro: livro + ponteiro next
-- Struct NoBST: codigo + ponteiros left/right
-- Typedef das listas e da BST
+- Struct Usuario: nome, email ok 
+- Struct NoUsuario: usuario + ponteiro next ok 
+- Struct Livro: titulo, autor, ano, codigo, status, email_usuario ok 
+- Struct NoLivro: livro + ponteiro next ok 
+- Struct NoBST: codigo + ponteiros left/right ok 
+- Typedef das listas e da BST ok 
 
 ### Step 2 — Protótipos (functions.h)
-- Declarar todas as funções de usuário, livro, BST e menu
+- Declarar todas as funções de usuário, livro, BST e menu ok 
 
 ### Step 3 — Usuários (functions.c)
 - Cadastrar usuário (inserção ordenada por email, sem duplicata)
