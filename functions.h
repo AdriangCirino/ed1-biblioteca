@@ -3,7 +3,6 @@
 
 #include "data.h"
 
-//  USUARIOS 
 Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email);
 Usuario* buscarUsuarioPorEmail(Usuario *lista, char *email);
 Usuario* buscarUsuarioPorNome(Usuario *lista, char *nome);
@@ -11,7 +10,6 @@ Usuario* atualizarNomeUsuario(Usuario *lista, char *email, char *novoNome);
 Usuario* excluirUsuario(Usuario *lista, char *email);
 void listarEmprestimosPorUsuario(Livro *listaLivros, char *email);
 
-//  LIVROS 
 Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *autor, int ano);
 Livro* buscarLivroPorCodigo(Livro *lista, int codigo);
 void buscarLivroPorAutor(Livro *lista, char *autor);
@@ -20,20 +18,19 @@ Livro* excluirLivro(Livro *lista, IdsArvore **arvore, int codigo);
 Livro* emprestarLivro(Livro *lista, int codigo, char *emailUsuario);
 Livro* devolverLivro(Livro *lista, int codigo);
 
-//  ARVORE DE IDS 
 IdsArvore* inserirID(IdsArvore *arvore, int codigo);
 int verificarID(IdsArvore *arvore, int codigo);
 void liberarArvore(IdsArvore *arvore);
 
-//  MENUS 
+int lerInteiro();
+
 void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvore);
 void menuCadastro(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvore);
 void menuConsulta(Usuario *listaUsuarios, Livro *listaLivros);
 void menuAtualizacao(Usuario **listaUsuarios, Livro **listaLivros);
 void menuExclusao(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvore);
 
-//  MEMORIA 
 void liberarUsuarios(Usuario *lista);
 void liberarLivros(Livro *lista);
 
-#endif // FUNCTIONS_H
+#endif  FUNCTIONS_H

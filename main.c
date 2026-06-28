@@ -3,7 +3,6 @@
 #include "data.h"
 #include "functions.h"
 
-
 int main(){
 
     Usuario *listaUsuarios = NULL;
