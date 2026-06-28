@@ -33,4 +33,4 @@ void menuExclusao(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
 void liberarUsuarios(Usuario *lista);
 void liberarLivros(Livro *lista);
 
-#endif  FUNCTIONS_H
+#endif // FUNCTIONS_H

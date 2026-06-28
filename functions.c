@@ -6,13 +6,13 @@
 
 int proximoID = 1; // Contador global para gerar o codigo dos livros
 
-// --- FUNCOES AUXILIARES ---
+//  FUNCOES AUXILIARES 
 
 int lerInteiro(){
     int valor;
     int resultado = scanf("%d", &valor);
 
-    // Se o usuario digitar letra em vez de numero, limpa o lixo
+    // Se o usuario digitar alguma coisa diferente em vez de numero, limpa o lixo
     if(resultado != 1){
         while(getchar() != '\n'); 
         return -1;
@@ -28,27 +28,27 @@ int lerInteiro(){
 void lerString(char *destino, int tamanho){
     fgets(destino, tamanho, stdin);
 
-    // Remove o '\n' do final da string, se existir
+    // Remove o '\n' do final da string, 
     int len = strlen(destino);
     if(len > 0 && destino[len - 1] == '\n'){
         destino[len - 1] = '\0';
     }
 }
+ // obs: Esse trecho l 15 a 30 foi sugerido e gerado pela Claude
 
-
-// --- USUARIOS ---
+//  USUARIOS 
 
 Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email){
     Usuario *temp = lista;
     
-    // Verifica se ja existe alguem com esse email ou nome
+    // Verifica se ja existe alguem com esse email ou nome 
     while(temp != NULL){
         if(strcmp(temp->email, email) == 0){
-            printf("\n[!] Erro: Email ja cadastrado!\n");
+            printf("\n Erro: Email ja cadastrado!\n");
             return lista;
         }
         if(strcmp(temp->nome, nome) == 0){
-            printf("\n[!] Erro: Nome ja cadastrado!\n");
+            printf("\n Erro: Nome ja cadastrado!\n");
             return lista;
         }
         temp = temp->next;
@@ -63,7 +63,7 @@ Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email){
     // Insere em ordem alfabetica de email
     if(lista == NULL || strcmp(novo->email, lista->email) < 0){
         novo->next = lista;
-        printf("\n[+] Usuario cadastrado com sucesso!\n");
+        printf("\n Usuario cadastrado com sucesso!\n");
         return novo;
     }
 
@@ -75,7 +75,7 @@ Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email){
     novo->next = atual->next;
     atual->next = novo;
 
-    printf("\n[+] Usuario cadastrado com sucesso!\n");
+    printf("\n Usuario cadastrado com sucesso!\n");
     return lista;
 }
 
@@ -104,18 +104,18 @@ Usuario* buscarUsuarioPorNome(Usuario *lista, char *nome){
 Usuario* atualizarNomeUsuario(Usuario *lista, char *email, char *novoNome){
     Usuario *atual = buscarUsuarioPorEmail(lista, email);
     if(atual == NULL){
-        printf("\n[!] Usuario nao encontrado!\n");
+        printf("\n Usuario nao encontrado!\n");
         return lista;
     }
     strcpy(atual->nome, novoNome);
-    printf("\n[+] Nome atualizado com sucesso!\n");
+    printf("\n Nome atualizado com sucesso!\n");
     return lista;
 }
 
 Usuario* excluirUsuario(Usuario *lista, char *email){
     Usuario *atual = buscarUsuarioPorEmail(lista, email);
     if(atual == NULL){
-        printf("\n[!] Usuario nao encontrado!\n");
+        printf("\n Usuario nao encontrado!\n");
         return lista;
     }
 
@@ -123,7 +123,7 @@ Usuario* excluirUsuario(Usuario *lista, char *email){
     if(atual == lista){
         lista = lista->next;
         free(atual);
-        printf("\n[+] Usuario excluido com sucesso!\n");
+        printf("\n Usuario excluido com sucesso!\n");
         return lista;
     }
     
@@ -136,7 +136,7 @@ Usuario* excluirUsuario(Usuario *lista, char *email){
     anterior->next = atual->next; // Pula o no atual
     free(atual);
     
-    printf("\n[+] Usuario excluido com sucesso!\n");
+    printf("\n Usuario excluido com sucesso!\n");
     return lista;
 }
 
@@ -144,7 +144,7 @@ void listarEmprestimosPorUsuario(Livro *listaLivros, char *email){
     Livro *atual = listaLivros;
     int encontrou = 0;
 
-    printf("\n--- Livros com o usuario %s ---\n", email);
+    printf("\n Livros com o usuario %s \n", email);
     while(atual != NULL){
         if(atual->status == 1 && strcmp(atual->email_usuario, email) == 0){
             printf("Codigo: %d | Titulo: %s\n", atual->codigo, atual->titulo);
@@ -158,8 +158,7 @@ void listarEmprestimosPorUsuario(Livro *listaLivros, char *email){
     }
 }
 
-
-// --- ARVORE DE IDS ---
+//  ARVORE DE IDS 
 
 IdsArvore* inserirID(IdsArvore *arvore, int codigo){
     if(arvore == NULL){
@@ -201,7 +200,7 @@ void liberarArvore(IdsArvore *arvore){
 }
 
 
-// --- LIVROS ---
+//  LIVROS 
 
 Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *autor, int ano){
     
@@ -209,7 +208,7 @@ Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *auto
     Livro *temp = lista;
     while(temp != NULL){
         if(strcmp(temp->titulo, titulo) == 0){
-            printf("\n[!] Erro: Livro com este titulo ja existe!\n");
+            printf("\n Erro: Livro com este titulo ja existe!\n");
             return lista;
         }
         temp = temp->next;
@@ -229,7 +228,7 @@ Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *auto
 
     *arvore = inserirID(*arvore, codigo);
 
-    printf("\n[+] Livro cadastrado! Codigo gerado: %d\n", codigo);
+    printf("\n Livro cadastrado! Codigo gerado: %d\n", codigo);
 
     // Insere ordenado por codigo crescente
     if(lista == NULL || novo->codigo < lista->codigo){
@@ -263,7 +262,7 @@ void buscarLivroPorAutor(Livro *lista, char *autor){
     Livro *atual = lista;
     int encontrou = 0;
 
-    printf("\n--- Resultados para o autor: %s ---\n", autor);
+    printf("\n Resultados para o autor: %s \n", autor);
     while(atual != NULL){
         if(strcmp(atual->autor, autor) == 0){
             printf("Cod: %d | Titulo: %s | Ano: %d\n", atual->codigo, atual->titulo, atual->ano);
@@ -280,7 +279,7 @@ void buscarLivroPorAutor(Livro *lista, char *autor){
 Livro* atualizarLivro(Livro *lista, int codigo, char *novoTitulo, char *novoAutor, int novoAno){
     Livro *atual = buscarLivroPorCodigo(lista, codigo);
     if(atual == NULL){
-        printf("\n[!] Livro nao encontrado.\n");
+        printf("\n Livro nao encontrado.\n");
         return lista;
     }
 
@@ -288,27 +287,27 @@ Livro* atualizarLivro(Livro *lista, int codigo, char *novoTitulo, char *novoAuto
     strcpy(atual->autor, novoAutor);
     atual->ano = novoAno;
     
-    printf("\n[+] Livro atualizado com sucesso!\n");
+    printf("\n Livro atualizado com sucesso!\n");
     return lista;
 }
 
 Livro* excluirLivro(Livro *lista, IdsArvore **arvore, int codigo){
     Livro *atual = buscarLivroPorCodigo(lista, codigo);
     if(atual == NULL){
-        printf("\n[!] Livro nao encontrado.\n");
+        printf("\n Livro nao encontrado.\n");
         return lista;
     }
 
     // Nao deixa excluir se estiver emprestado
     if(atual->status == 1){
-        printf("\n[!] Nao e possivel excluir: o livro esta emprestado.\n");
+        printf("\n Nao e possivel excluir: o livro esta emprestado.\n");
         return lista;
     }
 
     if(atual == lista){
         lista = lista->next;
         free(atual);
-        printf("\n[+] Livro excluido com sucesso!\n");
+        printf("\n Livro excluido com sucesso!\n");
         return lista;
     }
 
@@ -319,50 +318,50 @@ Livro* excluirLivro(Livro *lista, IdsArvore **arvore, int codigo){
     anterior->next = atual->next;
     free(atual);
 
-    printf("\n[+] Livro excluido com sucesso!\n");
+    printf("\n Livro excluido com sucesso!\n");
     return lista;
 }
 
 Livro* emprestarLivro(Livro *lista, int codigo, char *emailUsuario){
     Livro *atual = buscarLivroPorCodigo(lista, codigo);
     if(atual == NULL){
-        printf("\n[!] Livro nao encontrado.\n");
+        printf("\n Livro nao encontrado.\n");
         return lista;
     }
 
     if(atual->status == 1){
-        printf("\n[!] Livro ja esta emprestado para outro usuario.\n");
+        printf("\n Livro ja esta emprestado para outro usuario.\n");
         return lista;
     }
 
     atual->status = 1;
     strcpy(atual->email_usuario, emailUsuario);
     
-    printf("\n[+] Livro emprestado com sucesso!\n");
+    printf("\n Livro emprestado com sucesso!\n");
     return lista;
 }
 
 Livro* devolverLivro(Livro *lista, int codigo){
     Livro *atual = buscarLivroPorCodigo(lista, codigo);
     if(atual == NULL){
-        printf("\n[!] Livro nao encontrado.\n");
+        printf("\n Livro nao encontrado.\n");
         return lista;
     }
 
     if(atual->status == 0){
-        printf("\n[!] Este livro ja esta disponivel na biblioteca.\n");
+        printf("\n Este livro ja esta disponivel na biblioteca.\n");
         return lista;
     }
 
     atual->status = 0;
     strcpy(atual->email_usuario, "");
     
-    printf("\n[+] Devolucao realizada com sucesso!\n");
+    printf("\n Devolucao realizada com sucesso!\n");
     return lista;
 }
 
 
-// --- MEMORIA ---
+//  MEMORIA 
 
 void liberarUsuarios(Usuario *lista){
     Usuario *atual = lista;
@@ -383,7 +382,7 @@ void liberarLivros(Livro *lista){
 }
 
 
-// --- MENUS ---
+//  MENUS 
 
 void menuCadastro(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvore){
     int opcao, ano;
@@ -416,7 +415,7 @@ void menuCadastro(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
             *listaUsuarios = cadastrarUsuario(*listaUsuarios, nome, email);
         }
         else if(opcao != 0){
-            printf("\n[!] Opcao invalida!\n");
+            printf("\n Opcao invalida!\n");
         }
     } while(opcao != 0);
 }
@@ -445,9 +444,9 @@ void menuConsulta(Usuario *listaUsuarios, Livro *listaLivros){
                 codigo = lerInteiro();
                 l = buscarLivroPorCodigo(listaLivros, codigo);
                 if(l == NULL){
-                    printf("\n[!] Livro nao encontrado.\n");
+                    printf("\n Livro nao encontrado.\n");
                 } else {
-                    printf("\n--- Livro Encontrado ---\n");
+                    printf("\n Livro Encontrado \n");
                     printf("Titulo: %s\nAutor: %s\nAno: %d\nStatus: %s\n",
                         l->titulo, l->autor, l->ano, l->status == 0 ? "Disponivel" : "Emprestado");
                 }
@@ -472,9 +471,9 @@ void menuConsulta(Usuario *listaUsuarios, Livro *listaLivros){
             }
 
             if(u == NULL){
-                printf("\n[!] Usuario nao encontrado.\n");
+                printf("\n Usuario nao encontrado.\n");
             } else {
-                printf("\n--- Usuario Encontrado ---\n");
+                printf("\n Usuario Encontrado \n");
                 printf("Nome: %s | Email: %s\n", u->nome, u->email);
             }
         }
@@ -484,7 +483,7 @@ void menuConsulta(Usuario *listaUsuarios, Livro *listaLivros){
             listarEmprestimosPorUsuario(listaLivros, busca);
         }
         else if(opcao != 0){
-            printf("\n[!] Opcao invalida!\n");
+            printf("\n Opcao invalida!\n");
         }
 
     } while(opcao != 0);
@@ -508,7 +507,7 @@ void menuAtualizacao(Usuario **listaUsuarios, Livro **listaLivros){
 
             Livro *l = buscarLivroPorCodigo(*listaLivros, codigo);
             if(l == NULL){
-                printf("\n[!] Livro nao encontrado.\n");
+                printf("\n Livro nao encontrado.\n");
             } else {
                 printf("\nLivro atual: %s | Autor: %s | Ano: %d\n", l->titulo, l->autor, l->ano);
                 printf("O que deseja alterar?\n");
@@ -541,7 +540,7 @@ void menuAtualizacao(Usuario **listaUsuarios, Livro **listaLivros){
             *listaUsuarios = atualizarNomeUsuario(*listaUsuarios, email, nome);
         }
         else if(opcao != 0){
-            printf("\n[!] Opcao invalida!\n");
+            printf("\n Opcao invalida!\n");
         }
     } while(opcao != 0);
 }
@@ -564,7 +563,7 @@ void menuExclusao(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
 
             Livro *l = buscarLivroPorCodigo(*listaLivros, codigo);
             if(l == NULL){
-                printf("\n[!] Livro nao encontrado.\n");
+                printf("\n Livro nao encontrado.\n");
             } else {
                 printf("\nLivro: %s | Autor: %s\n", l->titulo, l->autor);
                 printf("Confirma a exclusao? 1-Sim ou 2-Nao: ");
@@ -593,14 +592,14 @@ void menuExclusao(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
             }
 
             if(temLivro == 1){
-                printf("\n[!] Nao e possivel excluir: usuario possui livros pendentes.\n");
+                printf("\n Nao e possivel excluir: usuario possui livros pendentes.\n");
                 printf("Faca a devolucao antes de exclui-lo.\n");
             } else {
                 *listaUsuarios = excluirUsuario(*listaUsuarios, email);
             }
         }
         else if(opcao != 0){
-            printf("\n[!] Opcao invalida!\n");
+            printf("\n Opcao invalida!\n");
         }
 
     } while(opcao != 0);
@@ -611,19 +610,19 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
     char email[100];
 
     do{
-        printf("\n========================================\n");
-        printf("   SISTEMA DE CONTROLE DE BIBLIOTECA\n");
-        printf("========================================\n");
-        printf("1. Cadastro\n");
-        printf("2. Consulta\n");
-        printf("3. Atualizacao\n");
-        printf("4. Exclusao\n");
-        printf("5. Emprestimo\n");
-        printf("6. Devolucao\n");
-        printf("0. Sair\n");
-        printf("========================================\n");
-        printf("Escolha uma opcao: ");
-        opcao = lerInteiro();
+        printf("  +--------------------------------------+\n");
+        printf("  |           /tmp/Bibioteca             |\n");
+        printf("  +--------------------------------------+\n");
+        printf("  |1. Cadastro                           |\n");
+        printf("  | 2. Consulta                          |\n");
+        printf("  | 3. Atualizacao                       |\n");
+        printf("  | 4. Exclusao                          |\n");
+        printf("  | 5. Emprestimo                        |\n");
+        printf("  | 6. Devolucao                         |\n");
+        printf("  | 0. Sair                              |\n");
+        printf("  +--------------------------------------+\n");
+        printf("  -> Escolha uma opcao:"); opcao = lerInteiro();
+
 
         if(opcao == 1){
             menuCadastro(listaUsuarios, listaLivros, arvore);
@@ -645,7 +644,7 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
             // Validacao cruzada: so empresta se o usuario existir
             Usuario *u = buscarUsuarioPorEmail(*listaUsuarios, email);
             if(u == NULL){
-                printf("\n[!] Erro: Usuario nao cadastrado.\n");
+                printf("\n Erro: Usuario nao cadastrado.\n");
             } else {
                 printf("Codigo do livro: ");
                 codigo = lerInteiro();
@@ -659,10 +658,20 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
             *listaLivros = devolverLivro(*listaLivros, codigo);
         }
         else if(opcao != 0){
-            printf("\n[!] Opcao invalida!\n");
+            printf("\n Opcao invalida!\n");
         }
 
     } while(opcao != 0);
+ 
 
-    printf("\nSaindo do sistema...\n");
+printf("\n  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+printf("  : Sistema de Biblioteca encerrado.                         :\n");
+printf("  :                                                          :\n");
+printf("  :    \"Eu nao mato a literatura, eu sou um sintoma          :\n");
+printf("  :      de um leitor que ja desistiu dela.\"                 : \n");
+printf("  :                       - resposta de uma IA,              :\n");
+printf("  :                        em debate com Leandro Karnal      :\n");
+printf("  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+
+
 }

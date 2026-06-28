@@ -15,40 +15,40 @@ Mat: 20240017215
 - Declarar todas as funções de usuário, livro, BST e menu ok 
 
 ### Step 3 — Usuários (functions.c)
-- Cadastrar usuário (inserção ordenada por email, sem duplicata)
-- Buscar por email
-- Buscar por nome
-- Atualizar nome
-- Excluir por email
-- Listar livros emprestados por email
+- Cadastrar usuário (inserção ordenada por email, sem duplicata) ok
+- Buscar por email ok
+- Buscar por nome ok
+- Atualizar nome ok
+- Excluir por email ok
+- Listar livros emprestados por email ok
 
 ### Step 4 — BST de IDs (functions.c)
-- Inserir ID na BST
-- Verificar se ID existe
-- Remover ID da BST
-- Liberar BST
+- Inserir ID na BST ok
+- Verificar se ID existe ok
+- Remover ID da BST ok
+- Liberar BST ok
 
 ### Step 5 — Livros (functions.c)
-- Cadastrar livro (ID sequencial automático, inserção ordenada por ID, verifica duplicata na BST)
-- Buscar por código
-- Buscar por autor (retorna todos)
-- Atualizar título/autor/ano
-- Excluir por código (remove também da BST)
-- Empréstimo (muda status + registra email)
-- Devolução (muda status + limpa email)
+- Cadastrar livro (ID sequencial automático, inserção ordenada por ID, verifica duplicata na BST) ok
+- Buscar por código ok 
+- Buscar por autor (retorna todos) ok
+- Atualizar título/autor/ano ok
+- Excluir por código (remove também da BST) ok
+- Empréstimo (muda status + registra email) ok
+- Devolução (muda status + limpa email) ok
 
 ### Step 6 — Menu (main.c)
-- Menu principal
-- Submenus de cadastro, consulta, atualização, exclusão
-- Fluxo de empréstimo e devolução
-- Liberar toda memória alocada ao sair
+- Menu principal ok 
+- Submenus de cadastro, consulta, atualização, exclusão ok
+- Fluxo de empréstimo e devolução ok 
+- Liberar toda memória alocada ao sair ok 
 
 ### Step 7 — Testes
-- Testar cada funcionalidade isoladamente
-- Testar fluxos completos (cadastrar livro → emprestar → devolver → excluir)
-- Testar casos de erro (ID duplicado, usuário não encontrado, etc)
+- Testar cada funcionalidade isoladamente ok 
+- Testar fluxos completos (cadastrar livro → emprestar → devolver → excluir) ok
+- Testar casos de erro (ID duplicado, usuário não encontrado, etc) ok 
 
 ### Step 8 — Revisão 
-- Comentários nas partes importantes do código
-- Comentários informando o uso de LLM
-- Atualizar checklist do README
+- Comentários nas partes importantes do código ok
+- Comentários informando o uso de LLM ok
+- Atualizar checklist do README ok 
