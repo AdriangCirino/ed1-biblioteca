@@ -1,4 +1,4 @@
-#ifndef FUNCTIONS_H
+#ifndef FUNCTIONS_H // essa e a ultima linha foram sugeridas pela Claude=
 #define FUNCTIONS_H
 
 #include "data.h"
@@ -7,7 +7,7 @@ Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email);
 Usuario* buscarUsuarioPorEmail(Usuario *lista, char *email);
 Usuario* buscarUsuarioPorNome(Usuario *lista, char *nome);
 Usuario* atualizarNomeUsuario(Usuario *lista, char *email, char *novoNome);
-Usuario* excluirUsuario(Usuario *lista, char *email);
+Usuario* excluirUsuario(Usuario *lista, char *email, Livro *listaLivros);
 void listarEmprestimosPorUsuario(Livro *listaLivros, char *email);
 
 Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *autor, int ano);
