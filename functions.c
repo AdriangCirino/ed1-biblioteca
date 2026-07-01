@@ -12,36 +12,37 @@ int lerInteiro(){
     int valor;
     int resultado = scanf("%d", &valor);
 
-    // Se o usuario digitar alguma coisa diferente em vez de numero, limpa o lixo
+    // Se o usuario digitar alguma coisa diferente em vez de numero, limpa o lixo do buffer
     if(resultado != 1){
         while(getchar() != '\n'); 
         return -1;
     }
 
-    // Limpa o '\n' que sobra no buffer
+    // Limpa o '\n' que sobra no buffer apos o scanf
     int c;
     while((c = getchar()) != '\n' && c != EOF);
 
     return valor;
 }
 
+// Obs: As funcoes de leitura (lerInteiro e lerString) foram sugeridas e geradas pelo Claude 
+// para evitar os bugs nativos do scanf ao lidar com strings e espacos em C.
 void lerString(char *destino, int tamanho){
     fgets(destino, tamanho, stdin);
 
-    // Remove o '\n' do final da string, 
+    // Remove o '\n' (quebra de linha) do final da string gerado pelo fgets
     int len = strlen(destino);
     if(len > 0 && destino[len - 1] == '\n'){
         destino[len - 1] = '\0';
     }
 }
- // obs: Esse trecho l 15 a 30 foi sugerido e gerado pela Claude
 
 //  USUARIOS 
 
 Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email){
     Usuario *temp = lista;
     
-    // Verifica se ja existe alguem com esse email ou nome 
+    // Verifica na lista encadeada inteira se ja existe alguem com esse email ou nome 
     while(temp != NULL){
         if(strcmp(temp->email, email) == 0){
             printf("\n Erro: Email ja cadastrado!\n");
@@ -54,24 +55,27 @@ Usuario* cadastrarUsuario(Usuario *lista, char *nome, char *email){
         temp = temp->next;
     }
 
-    // Cria e preenche o novo usuario
+    // Aloca memoria, cria e preenche o novo usuario
     Usuario *novo = (Usuario*) malloc(sizeof(Usuario));
     strcpy(novo->nome, nome);
     strcpy(novo->email, email);
     novo->next = NULL;
 
-    // Insere em ordem alfabetica de email
+    // Insercao na lista encadeada mantendo ordem alfabetica de email
+    // Caso especial: Lista vazia ou novo email vem antes do primeiro elemento (head)
     if(lista == NULL || strcmp(novo->email, lista->email) < 0){
         novo->next = lista;
         printf("\n Usuario cadastrado com sucesso!\n");
         return novo;
     }
 
+    // Navega ate encontrar a posicao correta para inserir sem quebrar a ordenacao
     Usuario *atual = lista;
     while(atual->next != NULL && strcmp(atual->next->email, novo->email) < 0){
         atual = atual->next;
     }
 
+    // Reajusta os ponteiros para encaixar o novo no meio/fim
     novo->next = atual->next;
     atual->next = novo;
 
@@ -102,7 +106,8 @@ Usuario* buscarUsuarioPorNome(Usuario *lista, char *nome){
 }
 
 Usuario* atualizarNomeUsuario(Usuario *lista, char *email, char *novoNome){
-    // Verifica se ja existe alguem com esse novo nome 105 a 114 gerada por ia 
+    // Trecho gerado via IA para impedir a duplicidade de nomes.
+    // Ele percorre a lista e bloqueia se achar o 'novoNome' em um email diferente do atual.
     Usuario *temp = lista;
     while(temp != NULL){
         if(strcmp(temp->nome, novoNome) == 0 && strcmp(temp->email, email) != 0){
@@ -130,22 +135,23 @@ Usuario* excluirUsuario(Usuario *lista, char *email, Livro *listaLivros){
         return lista;
     }
 
-    // Se for o primeiro da lista
+    // Caso 1: O usuario a ser excluido e a head (primeiro no) da lista
     if(atual == lista){
-        lista = lista->next;
+        lista = lista->next; // A head passa a ser o proximo elemento
         free(atual);
         printf("\n Usuario excluido com sucesso!\n");
         return lista;
     }
     
-    // Procura quem aponta para o usuario que vamos excluir
+    // Caso 2: O usuario esta no meio ou final da lista.
+    // Precisamos de um ponteiro parando um no 'anterior' para poder pular o no excluido
     Usuario *anterior = lista;
     while(anterior->next != atual){
         anterior = anterior->next;
     }
     
-    anterior->next = atual->next; // Pula o no atual
-    free(atual);
+    anterior->next = atual->next; // Pula o no atual e religa a lista
+    free(atual); // Libera a memoria do usuario excluido
     
     printf("\n Usuario excluido com sucesso!\n");
     return lista;
@@ -172,6 +178,7 @@ void listarEmprestimosPorUsuario(Livro *listaLivros, char *email){
 //  ARVORE DE IDS 
 
 IdsArvore* inserirID(IdsArvore *arvore, int codigo){
+    // Se chegou numa folha vazia, cria o no
     if(arvore == NULL){
         IdsArvore *novo = (IdsArvore*) malloc(sizeof(IdsArvore));
         novo->codigo = codigo;
@@ -180,6 +187,7 @@ IdsArvore* inserirID(IdsArvore *arvore, int codigo){
         return novo;
     }
 
+    // Recursao para organizar a Arvore Binaria de Busca (menores a esquerda, maiores a direita)
     if(codigo < arvore->codigo){
         arvore->left = inserirID(arvore->left, codigo);
     } else if(codigo > arvore->codigo){
@@ -202,6 +210,7 @@ int verificarID(IdsArvore *arvore, int codigo){
 }
 
 void liberarArvore(IdsArvore *arvore){
+    // Libera a memoria da arvore em pos-ordem (esquerda, direita, raiz)
     if(arvore == NULL){
         return;
     }
@@ -210,7 +219,9 @@ void liberarArvore(IdsArvore *arvore){
     free(arvore);
 }
 
-// essas duas funcoes a seguir foi gerada 100% por ia 
+// As funcoes 'encontrarMinimo' e 'removerID' foram geradas 100% via LLM (IA) 
+// para lidar com a logica complexa de rebalanceamento e exclusao de nos da Arvore Binaria (BST).
+
 // Função auxiliar para encontrar o nó com o menor código (usada na remoção)
 IdsArvore* encontrarMinimo(IdsArvore* no) {
     IdsArvore* atual = no;
@@ -243,13 +254,13 @@ IdsArvore* removerID(IdsArvore* raiz, int codigo) {
         }
 
         // Caso 3: Nó com dois filhos
-        // Pega o sucessor in-order (o menor valor da subárvore direita)
+        // Pega o sucessor in-order (o menor valor da subárvore direita) para manter a estrutura ordenada
         IdsArvore* temp = encontrarMinimo(raiz->right);
         
         // Copia o valor do sucessor para o nó atual
         raiz->codigo = temp->codigo;
         
-        // Remove o sucessor da subárvore direita
+        // Remove o sucessor da subárvore direita, que agora duplicou
         raiz->right = removerID(raiz->right, temp->codigo);
     }
     return raiz;
@@ -268,13 +279,16 @@ Livro* cadastrarLivro(Livro *lista, IdsArvore **arvore, char *titulo, char *auto
         }
         temp = temp->next;
     }
-int codigo = proximoID;
-    // gerado por ia
-    // Mostrando para o professor que a busca O(log n) da árvore está sendo utilizada
-    // if (verificarID(*arvore, codigo) == 1) {
-    //     printf("\n Erro critico: ID %d ja existe na arvore!\n", codigo);
-    //     return lista;
-    // }
+    
+    int codigo = proximoID;
+    
+    // Utiliza busca em Arvore Binaria (complexidade O(log n) no caso medio)
+    // para garantir agilidade na validacao de IDs unicos, cumprindo o requisito extra do projeto.
+    // Estruturado em code-review com IA.
+    if (verificarID(*arvore, codigo) == 1) {
+        printf("\n Erro critico: ID %d ja existe na arvore!\n", codigo);
+        return lista;
+    }
     
     proximoID = proximoID + 1;
 
@@ -287,11 +301,12 @@ int codigo = proximoID;
     strcpy(novo->email_usuario, ""); 
     novo->next = NULL;
 
+    // Atualiza a estrutura auxiliar de busca rapida
     *arvore = inserirID(*arvore, codigo);
 
     printf("\n Livro cadastrado! Codigo gerado: %d\n", codigo);
 
-    // Insere ordenado por codigo crescente
+    // Insere na lista ordenado por codigo crescente
     if(lista == NULL || novo->codigo < lista->codigo){
         novo->next = lista;
         return novo;
@@ -338,7 +353,7 @@ void buscarLivroPorAutor(Livro *lista, char *autor){
 }
 
 Livro* atualizarLivro(Livro *lista, int codigo, char *novoTitulo, char *novoAutor, int novoAno){
-    // 1. Verifica se o novo titulo ja pertence a OUTRO livro 330 a 340 gerado por ia
+    // 1. Verifica se o novo titulo ja pertence a OUTRO livro (refatoracao por IA)
     Livro *temp = lista;
     while(temp != NULL){
         // Se o titulo for igual, mas o codigo for diferente, significa que a duplicata é real
@@ -349,7 +364,7 @@ Livro* atualizarLivro(Livro *lista, int codigo, char *novoTitulo, char *novoAuto
         temp = temp->next;
     }
 
-    // 2. Se passou pela verificacao, faz a atualizacao normal
+    // 2. Se passou pela verificacao antiburla, faz a atualizacao normal
     Livro *atual = buscarLivroPorCodigo(lista, codigo);
     if(atual == NULL){
         printf("\n Livro nao encontrado.\n");
@@ -377,24 +392,27 @@ Livro* excluirLivro(Livro *lista, IdsArvore **arvore, int codigo){
         return lista;
     }
 
-    // Se for o primeiro da lista
+    // Caso 1: Se for o primeiro da lista encadeada
     if(atual == lista){
         lista = lista->next;
         free(atual);
-        *arvore = removerID(*arvore, codigo); // Remove da árvore
+        
+        // Mantem a integridade apagando o dado da arvore tambem (rebalanceando via recursao)
+        *arvore = removerID(*arvore, codigo); 
         printf("\n Livro excluido com sucesso!\n");
         return lista;
     }
 
-    // Procura no meio ou fim da lista
+    // Caso 2: Procura no meio ou fim da lista e religa o ponteiro pulando o excluido
     Livro *anterior = lista;
     while(anterior->next != atual){
         anterior = anterior->next;
     }
     anterior->next = atual->next;
     free(atual);
-    // gerado por ia
-    *arvore = removerID(*arvore, codigo); // Remove da árvore
+    
+    // Remocao sicronizada na arvore BST gerada por IA
+    *arvore = removerID(*arvore, codigo); 
 
     printf("\n Livro excluido com sucesso!\n");
     return lista;
@@ -444,7 +462,7 @@ Livro* devolverLivro(Livro *lista, int codigo){
 void liberarUsuarios(Usuario *lista){
     Usuario *atual = lista;
     while(atual != NULL){
-        Usuario *proximo = atual->next;
+        Usuario *proximo = atual->next; // Guarda o proximo no antes de destruir o atual
         free(atual);
         atual = proximo;
     }
@@ -481,11 +499,12 @@ void menuCadastro(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
             lerString(autor, sizeof(autor));
             printf("Ano: ");
             ano = lerInteiro();
-            while(ano < 0){ // esse while foi gerado por ia por que consegui colocar palavras ao inves de um ano em  si
+            
+            // Loop para blindar entrada de dados invalidos. Refatorado via IA.
+            while(ano < 0){ 
                 printf("Ano invalido. Digite um ano valido Ex:(2026) : ");
                 ano = lerInteiro();
             }
-
 
             *listaLivros = cadastrarLivro(*listaLivros, arvore, titulo, autor, ano);
         }
@@ -544,7 +563,7 @@ void menuConsulta(Usuario *listaUsuarios, Livro *listaLivros){
             printf("Buscar por: 1-Email ou 2-Nome: ");
             subOpcao = lerInteiro();
             
-            // Separa a leitura para exibir a mensagem correta
+            // Separa a leitura para exibir a mensagem correta ao usuario
             if(subOpcao == 1){
                 printf("Digite o email: ");
                 lerString(busca, sizeof(busca));
@@ -607,7 +626,7 @@ void menuAtualizacao(Usuario **listaUsuarios, Livro **listaLivros){
                     printf("1. Titulo\n2. Autor\n3. Ano\n0. Concluir\nEscolha: ");
                     campo = lerInteiro();
 
-if(campo == 1){
+                    if(campo == 1){
                         printf("Novo titulo: ");
                         lerString(titulo, sizeof(titulo));
                         *listaLivros = atualizarLivro(*listaLivros, codigo, titulo, l->autor, l->ano);
@@ -628,7 +647,6 @@ if(campo == 1){
                         }
                         *listaLivros = atualizarLivro(*listaLivros, codigo, l->titulo, l->autor, ano);
                         l = buscarLivroPorCodigo(*listaLivros, codigo);
-                        printf("Atualizado!\n");
                     }
                     else if(campo != 0){
                         printf("Opcao invalida!\n");
@@ -708,6 +726,8 @@ void menuExclusao(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arvo
             } else {
                 Livro *temp = *listaLivros;
                 int temLivro = 0;
+                
+                // Valida se o usuario tem pendencias antes de excluir da memoria
                 while(temp != NULL){
                     if(temp->status == 1 && strcmp(temp->email_usuario, email) == 0){
                         temLivro = 1;
@@ -756,7 +776,6 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
         printf("  +--------------------------------------+\n");
         printf("  -> Escolha uma opcao:"); opcao = lerInteiro();
 
-
         if(opcao == 1){
             menuCadastro(listaUsuarios, listaLivros, arvore);
         }
@@ -769,33 +788,35 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
         else if(opcao == 4){
             menuExclusao(listaUsuarios, listaLivros, arvore);
         }
-        else if(opcao == 5){ // pedi pra claude arrumar pq saia do loop ao nao encontrar o user ou livro
-                    printf("\n--- EMPRESTIMO ---\n");
-                    Usuario *u = NULL;
+        else if(opcao == 5){ 
+            // Trecho refatorado com auxilio de IA (LLM) para implementar laços de validacao 
+            // ('while') com rota de fuga ('0'), evitando a quebra abrupta para o menu anterior.
+            printf("\n--- EMPRESTIMO ---\n");
+            Usuario *u = NULL;
 
-                    // Mantém o loop até achar um usuário válido ou o usuário cancelar
-                    while (u == NULL) {
-                        printf("Email do usuario (ou '0' para cancelar): ");
-                        lerString(email, sizeof(email));
+            // Mantém o loop até achar um usuário válido ou o usuário cancelar
+            while (u == NULL) {
+                printf("Email do usuario (ou '0' para cancelar): ");
+                lerString(email, sizeof(email));
 
-                        if (strcmp(email, "0") == 0) {
-                            printf("\n[-] Emprestimo cancelado.\n");
-                            break; // Sai do loop de busca
-                        }
+                if (strcmp(email, "0") == 0) {
+                    printf("\n[-] Emprestimo cancelado.\n");
+                    break; // Quebra o laco e volta para o menu
+                }
 
-                        u = buscarUsuarioPorEmail(*listaUsuarios, email);
-                        
-                        if (u == NULL) {
-                            printf("\n Erro: Usuario nao cadastrado. Tente novamente.\n");
-                        }
-                    }
+                u = buscarUsuarioPorEmail(*listaUsuarios, email);
+                
+                if (u == NULL) {
+                    printf("\n Erro: Usuario nao cadastrado. Tente novamente.\n");
+                }
+            }
 
             // Só avança para pedir o livro se o usuário foi encontrado (u != NULL)
             if (u != NULL) {
                 printf("Codigo do livro: ");
                 codigo = lerInteiro();
                 
-                // Impede que o programa tente buscar códigos inválidos (como letras)
+                // Impede que o programa tente buscar códigos inválidos (como letras/negativos)
                 while (codigo <= 0) {
                     printf("\n Erro: Codigo invalido! Digite o numero do livro: ");
                     codigo = lerInteiro();
@@ -806,7 +827,7 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
         }
         else if(opcao == 6){
             printf("\n--- DEVOLUCAO ---\n");
-            int sucesso = 0; // 755 a 802 foi gerada por ia tambem
+            int sucesso = 0; // Refatoracao com laço gerada via auxilio de IA
 
             while (sucesso == 0) {
                 printf("Codigo do livro (ou '0' para cancelar): ");
@@ -814,43 +835,45 @@ void menuPrincipal(Usuario **listaUsuarios, Livro **listaLivros, IdsArvore **arv
 
                 if (codigo == 0) {
                     printf("\n[-] Devolucao cancelada.\n");
-                    break; // Quebra o loop e volta pro menu
+                    break; 
                 }
 
-                // Protege contra digitação de letras ou números negativos
+                // Protege contra digitação de caracteres incorretos
                 if (codigo < 0) {
                     printf("\n Erro: Codigo invalido! Digite o numero do livro.\n");
-                    continue; // Volta pro começo do loop
+                    continue; 
                 }
 
-                // Guardamos uma referência antes de tentar devolver para saber se o loop deve parar
+                // Armazena a referencia para testar se o livro existia
                 Livro *l = buscarLivroPorCodigo(*listaLivros, codigo);
                 
-                // A função devolverLivro já tem as mensagens de "não encontrado", "já disponível" ou "sucesso".
                 *listaLivros = devolverLivro(*listaLivros, codigo);
                 
-                // Se o livro existia, a operação concluiu (seja devolvendo ou avisando que já estava disponível).
+                // Se o ponteiro nao e nulo, a operacao fluiu
                 if (l != NULL) {
-                    sucesso = 1; // Sai do loop
+                    sucesso = 1; 
                 }
             }
         }
     } while(opcao != 0);
-    liberarUsuarios(*listaUsuarios); // claude sugeriu essas 7 linhas ate 811 pra evitar memory leak
+    
+    // Processo de limpeza de memoria sugerido em code review por IA. daqui ate 870 full gerado por ia 
+    // Garante que todos os mallocs tenham seus devidos frees, evitando Memory Leak ao sair.
+    liberarUsuarios(*listaUsuarios); 
     liberarLivros(*listaLivros);
     liberarArvore(*arvore);
-    // Garante que os ponteiros não apontem para lixo de memoria
+    
+    // Atribui NULL para garantir que ponteiros nao fiquem apontando para 'lixo' de memoria
     *listaUsuarios = NULL;
     *listaLivros = NULL;
     *arvore = NULL;
-printf("\n  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
-printf("  : Sistema de Biblioteca encerrado.                         :\n");
-printf("  :                                                          :\n");
-printf("  :    \"Eu nao mato a literatura, eu sou um sintoma          :\n");
-printf("  :      de um leitor que ja desistiu dela.\"                 : \n");
-printf("  :                       - resposta de uma IA,              :\n");
-printf("  :                        em debate com Leandro Karnal      :\n");
-printf("  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
-
-
+    
+    printf("\n  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+    printf("  : Sistema de Biblioteca encerrado.                         :\n");
+    printf("  :                                                          :\n");
+    printf("  :    \"Eu nao mato a literatura, eu sou um sintoma          :\n");
+    printf("  :      de um leitor que ja desistiu dela.\"                 : \n");
+    printf("  :                       - resposta de uma IA,              :\n");
+    printf("  :                        em debate com Leandro Karnal      :\n");
+    printf("  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
 }
